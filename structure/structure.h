@@ -7,13 +7,16 @@
 #include <X11/XKBlib.h>
 #include <thread>
 #include <chrono>
-#include <iostream>
-#include <string>
 #include <stdexcept>
 #include <memory>
 #include <cstdio>
 #include <unistd.h>
 #include <functional>
+#include "../dotenv.h"
 #include <fstream>
 #include <array>
-#include "encrypt/encrypt.h"
+#include "../config_var/main.cpp"
+
+std::string exec_parsed(const std::string);
+void show_encrypted(NotifyNotification*& notification);
+void block_input();

